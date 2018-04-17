@@ -34,7 +34,7 @@ function main() {
 
   case 'addAlbum':
     if(unqfy.getArtistByName(process.argv[3]) !== undefined){
-      unqfy.addAlbum(process.argv[3], {name: process.argv[4], year: process.argv[5]});
+      unqfy.addAlbum(process.argv[3], {name: process.argv[4], year: process.argv[5].parseInt()});
     }else{
       console.log('No existe el artista: ' + process.argv[3]);
     }
@@ -42,14 +42,14 @@ function main() {
 
   case 'addTrack':
     if(unqfy.getAlbumByName(process.argv[3]) !== undefined){
-      unqfy.addTrack(process.argv[3], {name: process.argv[4], duration: process.argv[5], genre: process.argv[6]});
+      unqfy.addTrack(process.argv[3], {name: process.argv[4], duration: process.argv[5].parseInt(), genre: process.argv[6]});
     }else{
       console.log('No existe el album: ' + process.argv[3]);
     }
     break;
 
   case 'addPlaylist':
-    unqfy.addPlaylist(process.argv[3], process.argv[4], process.argv[5]);
+    unqfy.addPlaylist(process.argv[3], (process.argv[4]).split(','), process.argv[5].parseInt());
     break;
 
   case 'getArtistByName':
@@ -65,12 +65,11 @@ function main() {
     break;
   
   case 'getPlaylistByName':
-    //console.log(unqfy.getPlaylistByName(process.argv[3]));
-    console.log(unqfy.getPlaylistByName(process.argv[3]).tracksList);
+    console.log(unqfy.getPlaylistByName(process.argv[3]));
     break;
   
   case 'getTracksMatchingGenres':
-    console.log(unqfy.getTracksMatchingGenres(process.argv[3]));
+    console.log(unqfy.getTracksMatchingGenres(process.argv[3].split(',')));
     break;
  
   case 'getTracksMatchingArtist':
