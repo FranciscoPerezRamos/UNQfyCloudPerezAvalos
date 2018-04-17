@@ -99,7 +99,7 @@ class UNQfy {
   addAlbum(artistName, params) {
     const albumNew = new Album(artistName, params.name, params.year);
     this.albumsList.push(albumNew);
-    this.getArtistByName(artistName).addAlbum(albumNew);
+    this.getArtistByName(artistName).addAlbum(albumNew.name);
 
   }
 
