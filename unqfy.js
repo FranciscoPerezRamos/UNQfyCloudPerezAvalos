@@ -106,7 +106,7 @@ class UNQfy {
   addTrack(albumName, params) {
     const album = this.getAlbumByName(albumName);
     const track = new Track(albumName, album.artist, params.name, params.duration, params.genre);
-    album.trackList.push(track);
+    album.trackList.push(track.name);
     this.trackList.push(track);
   }
 
@@ -137,8 +137,6 @@ class UNQfy {
   getArtistsMatchingParcialName(parcialName) {
     return this.artistsList.filter(artist => artist.name.includes(parcialName));
   }
-
-  
 
   addPlaylist(name, genresToInclude, maxDuration) {
 
@@ -182,6 +180,3 @@ class UNQfy {
 module.exports = {
   UNQfy, 
 };
-
-
-
