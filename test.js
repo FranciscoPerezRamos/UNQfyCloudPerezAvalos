@@ -39,9 +39,13 @@ describe('Add, remove and filter data', () => {
   it('should add an album to an artist', () => {
     createAndAddArtist(unqfy, 'Guns n\' Roses', 'USA');
     const album = createAndAddAlbum(unqfy, 'Guns n\' Roses', 'Appetite for Destruction', 1987);
+    createAndAddArtist(unqfy, 'Michael Jackson', 'USA');
+    createAndAddAlbum(unqfy, 'Michael Jackson', 'Thriller', 1987);
+  
 
     assert.equal(album.name, 'Appetite for Destruction');
     assert.equal(album.year, 1987);
+
   });
 
   it('should add a track to an album', () => {
@@ -55,6 +59,8 @@ describe('Add, remove and filter data', () => {
     assert.equal(track.genre,'rock');
     //assert.equal(track.genres.includes('hard rock'), true);
     //assert.lengthOf(track.genres, 2);
+
+    
   });
 
   it('should get all tracks matching genres', () => {
@@ -70,6 +76,7 @@ describe('Add, remove and filter data', () => {
     const t3 = createAndAddTrack(unqfy, 'Thriller', 'Another song II', 500, 'movie');
 
     const tracksMatching = unqfy.getTracksMatchingGenres(['pop', 'movie']);
+
 
     // assert.equal(tracks.matching.constructor.name, Array);
     assert.isArray(tracksMatching);
@@ -94,6 +101,7 @@ describe('Add, remove and filter data', () => {
     createAndAddTrack(unqfy, 'Thriller', 'Another song II', 500, 'movie');
 
     const matchingTracks = unqfy.getTracksMatchingArtist(artist.name);
+
 
     assert.isArray(matchingTracks);
     assert.lengthOf(matchingTracks, 3);

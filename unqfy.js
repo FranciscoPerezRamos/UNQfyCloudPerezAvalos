@@ -8,8 +8,19 @@ class Artist {
     this.albums = new Array();
   }
 
-  addAlbum(anAlbum){
-    this.albums.push(anAlbum);
+  addAlbum(album){
+    this.albums.push(album);
+  }
+
+  getAllTracks(){
+    let tracks = [];
+
+    this.albums.map((album) => album.tracklist).forEach((tracklist)=>
+    {
+      tracks = tracks.concat(tracklist);
+    });
+
+    return tracks;
   }
 
 }
@@ -17,30 +28,26 @@ class Artist {
 
 class Album {
 
-  constructor(artistName, albumName, albumYear){
-    this.artist = artistName;
+  constructor(albumName, albumYear){
     this.name = albumName;
     this.year = albumYear;
-    this.trackList = new Array();
+    this.tracklist = [];
   }
-
-  addTrack(aTrack){
-    this.trackList.push(aTrack);
-  }
-
 
   genres(){
-    const genres = new Array();
-    this.trackList.forEach((track) => genres.concat(track.genre)).unique();
-    return genres;
+    let genres = [];
+    this.tracklist.forEach((track) => {
+      genres = genres.concat(track.genre);
+    });
+    return genres.unique();
   }
 
   getTrack(name){
-    return this.trackList.find(track => track.name === name);
+    return this.tracklist.find(track => track.name === name);
   }
 
-  hasATrack(name){
-    return this.trackList.some(track => track.name === name);
+  hasATrack(track){
+    return this.tracklist.includes(track);
   }
 
 }
@@ -48,9 +55,8 @@ class Album {
 
 class Track {
   
-  constructor(albumName, author, trackName, trackDuration, genre){
+  constructor(albumName, trackName, trackDuration, genre){
     this.albumName = albumName;
-    this.author = author;
     this.name = trackName;
     this.duration = trackDuration;
     this.genre = genre;
@@ -61,15 +67,14 @@ class Track {
 
 class Playlist {
 
-  constructor(playlistName, trackList, duration){
+  constructor(playlistName, tracklist, duration){
     this.name = playlistName;
-    this.tracksList = trackList;
+    this.tracklist = tracklist;
     this.duration = duration;
   }
 
-
   hasTrack(aTrack){
-    return this.tracksList.includes(aTrack);
+    return this.tracklist.includes(aTrack);
   }
 
 }
@@ -79,17 +84,7 @@ class UNQfy {
 
   constructor(){
     this.artistsList = new Array();
-    this.albumsList = new Array();
     this.playlistsList = new Array();
-    this.trackList = new Array();
-  }
-
-  getTracksMatchingGenres(genres) {
-    return this.trackList.filter(track=> genres.includes(track.genre));
-  }
-
-  getTracksMatchingArtist(artistName) { 
-    return this.trackList.filter(track => track.author === artistName);
   }
 
   addArtist(params) {
@@ -97,17 +92,13 @@ class UNQfy {
   }
 
   addAlbum(artistName, params) {
-    const albumNew = new Album(artistName, params.name, params.year);
-    this.albumsList.push(albumNew);
-    this.getArtistByName(artistName).addAlbum(albumNew.name);
-
+    const albumNew = new Album(params.name, params.year);
+    this.getArtistByName(artistName).addAlbum(albumNew);
   }
 
   addTrack(albumName, params) {
-    const album = this.getAlbumByName(albumName);
-    const track = new Track(albumName, album.artist, params.name, params.duration, params.genre);
-    album.trackList.push(track.name);
-    this.trackList.push(track);
+    this.getAlbumByName(albumName).tracklist.push(
+      new Track(albumName, params.name, params.duration, params.genre));
   }
 
   getArtistByName(name) {
@@ -115,52 +106,84 @@ class UNQfy {
   }
 
   getAlbumByName(name) {
-    return this.albumsList.find(album => album.name === name);
+    return this.getAllAlbums().find(album => album.name === name);
   }
 
   getTrackByName(name) {
-    return this.trackList.find(track => track.name === name);
+    return this.getAllTracks().find(track => track.name === name);
   }
 
   getPlaylistByName(name) {
     return this.playlistsList.find(playlist => playlist.name === name);
-  }  
-
-  getTracksMatchingParcialName(parcialName) {
-    return this.trackList.filter(track => track.name.includes(parcialName));
+  }
+  
+  getTracksMatchingGenres(genres) {
+    return this.getAllTracks().filter((track)=>genres.includes(track.genre));
   }
 
-  getAlbumsMatchingParcialName(parcialName) {
-    return this.albumsList.filter(album => album.name.includes(parcialName));
+  getTracksMatchingArtist(artistName) { 
+    return this.getArtistByName(artistName).getAllTracks();
   }
 
   getArtistsMatchingParcialName(parcialName) {
     return this.artistsList.filter(artist => artist.name.includes(parcialName));
   }
 
+  getAlbumsMatchingParcialName(parcialName) {
+    return this.getAllAlbums().filter(album => album.name.includes(parcialName));
+  }
+
+  getTracksMatchingParcialName(parcialName) {
+    return this.getAllTracks().filter(track => track.name.includes(parcialName));
+  }
+
+
+  getAllAlbums(){
+    let albums = [];
+
+    this.artistsList.map((artist)=>artist.albums).forEach((albumsList)=>{
+      albums = albums.concat(albumsList);
+    });
+
+    return albums;
+  }
+
+  getAllTracks(){
+    let tracks = [];
+
+    this.artistsList.map((artist) => artist.getAllTracks()).forEach((listOfTrack)=>
+    {
+      tracks = tracks.concat(listOfTrack);
+    });
+
+    return tracks;
+  }
+
   addPlaylist(name, genresToInclude, maxDuration) {
 
-    const playslist = new Playlist(name, this.cutPlaylistByDuration(this.getTracksMatchingGenres(genresToInclude).sort(), maxDuration), maxDuration);
+    const listOfTracksAndTime = this.cutPlaylistByDuration(
+      this.getTracksMatchingGenres(genresToInclude).sort(), maxDuration);
 
-    this.playlistsList.push(playslist);
-
+    this.playlistsList.push(new Playlist(name, 
+      listOfTracksAndTime.tracks,
+      listOfTracksAndTime.time));
   }
 
   cutPlaylistByDuration(tracklist, maxDuration){
 
-    let tiempoAcumulado = 0;
-    let newTrackList = [];
+    let accumulatedTime = 0;
+    const newTrackList = [];
 
     tracklist.forEach(track => {
-      if(track.duration + tiempoAcumulado < maxDuration){
+      if(track.duration + accumulatedTime < maxDuration){
         newTrackList.push(track);
-        tiempoAcumulado = tiempoAcumulado + track.duration;
+        accumulatedTime = accumulatedTime + track.duration;
       }
       else{
-        return newTrackList;
+        return {tracks: newTrackList, time: accumulatedTime};
       }
     });
-    return newTrackList;
+    return {tracks: newTrackList, time: accumulatedTime};
   }
 
   save(filename = 'unqfy.json') {
