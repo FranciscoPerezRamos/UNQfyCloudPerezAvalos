@@ -35,16 +35,26 @@ function main() {
     break;
 
   case 'addAlbum':
+<<<<<<< HEAD
     if(unqfy.getArtistByName(process.argv[3].toLowerCase()) !== undefined){
       unqfy.addAlbum(process.argv[3].toLowerCase(), {name: process.argv[4].toLowerCase(), year: parseInt( process.argv[5])});
+=======
+    if(unqfy.getArtistByName(process.argv[3]) !== undefined){
+      unqfy.addAlbum(process.argv[3], {name: process.argv[4], year: parseInt(process.argv[5])});
+>>>>>>> ce4fa88d558e2d6ff27d5e913f6bf15f29a35e25
     }else{
       console.log('No existe el artista: ' + process.argv[3]);
     }
     break;
 
   case 'addTrack':
+<<<<<<< HEAD
     if(unqfy.getAlbumByName(process.argv[3].toLowerCase()) !== undefined){
       unqfy.addTrack(process.argv[3].toLowerCase(), {name: process.argv[4].toLowerCase(), duration: parseInt(process.argv[5]), genre: process.argv[6]});
+=======
+    if(unqfy.getAlbumByName(process.argv[3]) !== undefined){
+      unqfy.addTrack(process.argv[3], {name: process.argv[4], duration: parseInt(process.argv[5]), genre: process.argv[6]});
+>>>>>>> ce4fa88d558e2d6ff27d5e913f6bf15f29a35e25
     }else{
       console.log('No existe el album: ' + process.argv[3]);
     }
