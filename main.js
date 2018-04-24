@@ -73,6 +73,7 @@ function main() {
   
   case 'getTracksMatchingGenres':
     list = process.argv[3].split(',');
+    list = list.map(genre => genre.toLowerCase());
     console.log(unqfy.getTracksMatchingGenres(list));
     break;
  
