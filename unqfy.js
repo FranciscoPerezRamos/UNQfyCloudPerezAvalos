@@ -1,4 +1,7 @@
 const picklejs = require('picklejs');
+const rp = require('request-promise');
+const token = 'BQAfgjXpgpO-aCo8cawDiJGEAnM1h7OybhxHpdJNbusktNwoK3AFawAZ8Y8UgNWp_DcR9ThS62M1tWUep_xBdZyz_m8ko5GGv5ErFJpwr_iiX6HVQjKWhOCcGnuTWLAYiJCJOSZk9ecliK0YEeDniWaykO-AVjg7R7kgHViE23Gj1xLM2Q';
+const BASE_URLMM = 'http://api.musixmatch.com/ws/1.1';
 
 class Artist {
 
@@ -60,6 +63,61 @@ class Track {
     this.name = trackName;
     this.duration = trackDuration;
     this.genre = genre;
+    this.lyrics = null;
+  }
+
+  getLyricsMusixMatch(trackiID){
+    const options = {
+      uri: BASE_URLMM + `/track.lyrics.get?track_id=${trackiID}`,
+      qs: {
+        apikey: '0c09e6e399390218c7d8b382e1d92aba',
+      },
+      json: true // Automatically parses the JSON string in the response
+    };
+    rp.get(options).then((response) => {
+      const header = response.message.header;
+      const lyrics = response.message.body.lyrics.lyrics_body;
+      console.log(lyrics);
+      if (header.status_code !== 200){
+        console.log('algo salio mal', response);
+        return;
+      }
+      return lyrics;
+    }).catch((error) => {
+      console.log('algo salio mal', error);
+    });
+  }
+
+  getTrackIDMusixMatch(name){
+    const options = {
+      uri: BASE_URLMM + '/track.search',
+      qs: {
+        apikey: '0c09e6e399390218c7d8b382e1d92aba',
+        q_artist: name,
+      },
+      json: true // Automatically parses the JSON string in the response
+    };
+    rp.get(options).then((response) => {
+      const header = response.message.header;
+      const id = response.message.body.track_list[0].track.track_id;
+      console.log(id);
+      if (header.status_code !== 200){
+        console.log('algo salio mal', response);
+        return;
+      }
+      return id;
+    }).catch((error) => {
+      console.log('algo salio mal', error);
+    });
+  }
+
+  getLyrics(){
+    const trackiID = this.getTrackIDMusixMatch(this.name);
+
+    if(this.lyrics === null){
+      this.lyrics = this.getLyricsMusixMatch();
+    }
+    return this.lyrics;
   }
 
 }
@@ -85,6 +143,42 @@ class UNQfy {
   constructor(){
     this.artistsList = new Array();
     this.playlistsList = new Array();
+  }
+
+  getArtistIDByNameSpotify(name){
+    const options = {
+      url: `https://api.spotify.com/v1/search?q=${name}&type=artist&limit=1`,
+      headers: { Authorization: 'Bearer ' + token },
+      json: true,
+    };
+    rp.get(options)
+      .then((response) => {
+        console.log(response.artists.items[0].id);
+        return response.artists.items[0].id;
+      })
+      .catch((error) => console.log('Algo salio mal, puede que no exista ese artista', error));
+  }
+
+  getAlbumsFromArtistSpotify(artistId){
+    const options = {
+      url: `https://api.spotify.com/v1/artists/${artistId}/albums?market=ES&limit=5`,
+      headers: { Authorization: 'Bearer ' + token},
+      json: true,
+    };
+    return rp.get(options)
+      .then((response) => {
+        console.log(response.items);
+        return response.items;
+      })
+      .catch((error) => console.log('Algo salio mal, puede que no exista ese ID', error));  
+  }
+
+  populateAlbumsForArtist(artistName){
+    const artistID = this.getArtistIDByNameSpotify(artistName);
+    const albumsFromSpotify = this.getAlbumsFromArtistSpotify(artistID);
+    albumsFromSpotify.forEach((albumMap) => {
+      this.addAlbum(artistName, {name: albumMap.name, year: albumMap.release_date});
+    });
   }
 
   addArtist(params) {
