@@ -72,7 +72,7 @@ class Track {
       qs: {
         apikey: '0c09e6e399390218c7d8b382e1d92aba',
       },
-      json: true // Automatically parses the JSON string in the response
+      json: true 
     };
     rp.get(options).then((response) => {
       const header = response.message.header;
@@ -93,9 +93,9 @@ class Track {
       uri: BASE_URLMM + '/track.search',
       qs: {
         apikey: '0c09e6e399390218c7d8b382e1d92aba',
-        q_artist: name,
+        q_track: name,
       },
-      json: true // Automatically parses the JSON string in the response
+      json: true 
     };
     rp.get(options).then((response) => {
       const header = response.message.header;
@@ -115,11 +115,10 @@ class Track {
     const trackiID = this.getTrackIDMusixMatch(this.name);
 
     if(this.lyrics === null){
-      this.lyrics = this.getLyricsMusixMatch();
+      this.lyrics = this.getLyricsMusixMatch(trackiID);
     }
     return this.lyrics;
   }
-
 }
 
 
@@ -177,8 +176,9 @@ class UNQfy {
     const artistID = this.getArtistIDByNameSpotify(artistName);
     const albumsFromSpotify = this.getAlbumsFromArtistSpotify(artistID);
     albumsFromSpotify.forEach((albumMap) => {
-      this.addAlbum(artistName, {name: albumMap.name, year: albumMap.release_date});
+      this.addAlbum(artistName, {name: albumMap.name, year: albumMap.release_date}); //TODO: release_date trae año-mes-dia queremos solo el dia
     });
+  //TODO: Falta asociar album con artista if este existe.
   }
 
   addArtist(params) {
