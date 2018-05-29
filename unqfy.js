@@ -1,6 +1,6 @@
 const picklejs = require('picklejs');
 const rp = require('request-promise');
-const token = 'BQAfgjXpgpO-aCo8cawDiJGEAnM1h7OybhxHpdJNbusktNwoK3AFawAZ8Y8UgNWp_DcR9ThS62M1tWUep_xBdZyz_m8ko5GGv5ErFJpwr_iiX6HVQjKWhOCcGnuTWLAYiJCJOSZk9ecliK0YEeDniWaykO-AVjg7R7kgHViE23Gj1xLM2Q';
+const token = 'BQBnX6Xt9f91qDYwmNVPAYdFhjg2UXDjx69wJosLWhmYR-MY-eGZ2b1CintE33cUQLmfgmSyJvZDY71MxfpuLuD1uxjWQHBPh6ret0SHd_c9t9ccH5m1EHVsnFoaRYfjjdEWJg_Leg4vyrDxh7GN9m0FkdUEZVt2gXw-9GkCgzCQBRR4JQ';
 const BASE_URLMM = 'http://api.musixmatch.com/ws/1.1';
 
 class Artist {
@@ -25,7 +25,6 @@ class Artist {
 
     return tracks;
   }
-
 }
 
 
@@ -74,7 +73,7 @@ class Track {
       },
       json: true 
     };
-    rp.get(options).then((response) => {
+    return rp.get(options).then((response) => {
       const header = response.message.header;
       const lyrics = response.message.body.lyrics.lyrics_body;
       console.log(lyrics);
@@ -97,7 +96,7 @@ class Track {
       },
       json: true 
     };
-    rp.get(options).then((response) => {
+    return rp.get(options).then((response) => {
       const header = response.message.header;
       const id = response.message.body.track_list[0].track.track_id;
       console.log(id);
@@ -111,16 +110,22 @@ class Track {
     });
   }
 
-  getLyrics(){
-    const trackiID = this.getTrackIDMusixMatch(this.name);
+  setLyrics(lyrics){
+    this.lyrics = lyrics;
+  }
 
+  getLyrics(){
     if(this.lyrics === null){
-      this.lyrics = this.getLyricsMusixMatch(trackiID);
+      return this.getTrackIDMusixMatch(this.name)
+        .then((trackID) => this.getLyricsMusixMatch(trackID))
+        .then((lyric) => {
+          this.setLyrics(lyric);
+          return lyric;
+        });
     }
     return this.lyrics;
   }
 }
-
 
 class Playlist {
 
@@ -145,12 +150,15 @@ class UNQfy {
   }
 
   getArtistIDByNameSpotify(name){
+    if(this.getArtistsMatchingParcialName(name) == null){
+      throw Error("Ese artista no se ecuentra en UNQfy");
+    }
     const options = {
       url: `https://api.spotify.com/v1/search?q=${name}&type=artist&limit=1`,
       headers: { Authorization: 'Bearer ' + token },
       json: true,
     };
-    rp.get(options)
+    return rp.get(options)
       .then((response) => {
         console.log(response.artists.items[0].id);
         return response.artists.items[0].id;
@@ -173,12 +181,14 @@ class UNQfy {
   }
 
   populateAlbumsForArtist(artistName){
-    const artistID = this.getArtistIDByNameSpotify(artistName);
-    const albumsFromSpotify = this.getAlbumsFromArtistSpotify(artistID);
-    albumsFromSpotify.forEach((albumMap) => {
-      this.addAlbum(artistName, {name: albumMap.name, year: albumMap.release_date}); //TODO: release_date trae año-mes-dia queremos solo el dia
-    });
-  //TODO: Falta asociar album con artista if este existe.
+    return this.getArtistIDByNameSpotify(artistName)
+      .then((id) => this.getAlbumsFromArtistSpotify(id))
+      .then((albumsMap) => {
+        albumsMap.forEach((albumMap) => {
+          this.addAlbum(artistName, {name: albumMap.name, year: albumMap.release_date});
+        });
+        return this;
+      });
   }
 
   addArtist(params) {

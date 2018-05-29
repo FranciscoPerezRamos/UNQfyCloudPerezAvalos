@@ -29,7 +29,7 @@ function main() {
 
   switch(process.argv[2]){
   case 'addArtist':
-    unqfy.addArtist({name: process.argv[3],  country: process.argv[4]});
+    unqfy.addArtist({name: process.argv[3].toLowerCase(),  country: process.argv[4]});
     break;
 
   case 'addAlbum':
@@ -89,10 +89,16 @@ function main() {
   case 'getArtistsMatchingParcialName':
     console.log(unqfy.getArtistsMatchingParcialName(process.argv[3].toLowerCase()));
     break;
+  case 'populateAlbumsForArtist':
+    unqfy.populateAlbumsForArtist(process.argv[3]).then((response) => saveUNQfy(response, 'UNQfy.txt'));
+    break;
+  case 'getLyricsFromTrack':
+    unqfy.getTrackByName(process.argv[3]).getLyrics().then((lyric) => console.log(lyric));
+      
   }
-
-  saveUNQfy(unqfy, 'UNQfy.txt');
-
+  if(process.argv[2] !== 'populateAlbumsForArtist'){
+    saveUNQfy(unqfy, 'UNQfy.txt');
+  }
 }
 
 main();
