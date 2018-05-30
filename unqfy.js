@@ -1,14 +1,15 @@
 const picklejs = require('picklejs');
 const rp = require('request-promise');
-const token = 'BQAfgjXpgpO-aCo8cawDiJGEAnM1h7OybhxHpdJNbusktNwoK3AFawAZ8Y8UgNWp_DcR9ThS62M1tWUep_xBdZyz_m8ko5GGv5ErFJpwr_iiX6HVQjKWhOCcGnuTWLAYiJCJOSZk9ecliK0YEeDniWaykO-AVjg7R7kgHViE23Gj1xLM2Q';
+const token = 'BQBnX6Xt9f91qDYwmNVPAYdFhjg2UXDjx69wJosLWhmYR-MY-eGZ2b1CintE33cUQLmfgmSyJvZDY71MxfpuLuD1uxjWQHBPh6ret0SHd_c9t9ccH5m1EHVsnFoaRYfjjdEWJg_Leg4vyrDxh7GN9m0FkdUEZVt2gXw-9GkCgzCQBRR4JQ';
 const BASE_URLMM = 'http://api.musixmatch.com/ws/1.1';
 
 class Artist {
 
-  constructor(name, country){
+  constructor(id, name, country){
+    this.id = id;
     this.name = name;
-    this.country = country;
     this.albums = new Array();
+    this.country = country;
   }
 
   addAlbum(album){
@@ -25,7 +26,6 @@ class Artist {
 
     return tracks;
   }
-
 }
 
 
@@ -74,7 +74,7 @@ class Track {
       },
       json: true 
     };
-    rp.get(options).then((response) => {
+    return rp.get(options).then((response) => {
       const header = response.message.header;
       const lyrics = response.message.body.lyrics.lyrics_body;
       console.log(lyrics);
@@ -97,7 +97,7 @@ class Track {
       },
       json: true 
     };
-    rp.get(options).then((response) => {
+    return rp.get(options).then((response) => {
       const header = response.message.header;
       const id = response.message.body.track_list[0].track.track_id;
       console.log(id);
@@ -111,16 +111,22 @@ class Track {
     });
   }
 
-  getLyrics(){
-    const trackiID = this.getTrackIDMusixMatch(this.name);
+  setLyrics(lyrics){
+    this.lyrics = lyrics;
+  }
 
+  getLyrics(){
     if(this.lyrics === null){
-      this.lyrics = this.getLyricsMusixMatch(trackiID);
+      return this.getTrackIDMusixMatch(this.name)
+        .then((trackID) => this.getLyricsMusixMatch(trackID))
+        .then((lyric) => {
+          this.setLyrics(lyric);
+          return lyric;
+        });
     }
     return this.lyrics;
   }
 }
-
 
 class Playlist {
 
@@ -142,15 +148,19 @@ class UNQfy {
   constructor(){
     this.artistsList = new Array();
     this.playlistsList = new Array();
+    this.ids = 0;
   }
 
   getArtistIDByNameSpotify(name){
+    if(this.getArtistsMatchingParcialName(name) == null){
+      throw Error("Ese artista no se ecuentra en UNQfy");
+    }
     const options = {
       url: `https://api.spotify.com/v1/search?q=${name}&type=artist&limit=1`,
       headers: { Authorization: 'Bearer ' + token },
       json: true,
     };
-    rp.get(options)
+    return rp.get(options)
       .then((response) => {
         console.log(response.artists.items[0].id);
         return response.artists.items[0].id;
@@ -173,16 +183,29 @@ class UNQfy {
   }
 
   populateAlbumsForArtist(artistName){
-    const artistID = this.getArtistIDByNameSpotify(artistName);
-    const albumsFromSpotify = this.getAlbumsFromArtistSpotify(artistID);
-    albumsFromSpotify.forEach((albumMap) => {
-      this.addAlbum(artistName, {name: albumMap.name, year: albumMap.release_date}); //TODO: release_date trae año-mes-dia queremos solo el dia
-    });
-  //TODO: Falta asociar album con artista if este existe.
+    return this.getArtistIDByNameSpotify(artistName)
+      .then((id) => this.getAlbumsFromArtistSpotify(id))
+      .then((albumsMap) => {
+        albumsMap.forEach((albumMap) => {
+          this.addAlbum(artistName, {name: albumMap.name, year: albumMap.release_date});
+        });
+        return this;
+      });
+  }
+
+
+  deleteArtist(artist){
+  for(let i = this.artistsList.length - 1; i >= 0; i--) {
+      if(this.artistsList[i].name === artist.name) {
+        this.artistsList.splice(i, 1);
+      }
+   }
+
   }
 
   addArtist(params) {
-    this.artistsList.push(new Artist(params.name, params.country));
+    this.artistsList.push(new Artist(this.ids,params.name, params.country));
+    this.ids = this.ids + 1;
   }
 
   addAlbum(artistName, params) {
@@ -193,6 +216,14 @@ class UNQfy {
   addTrack(albumName, params) {
     this.getAlbumByName(albumName).tracklist.push(
       new Track(albumName, params.name, params.duration, params.genre));
+  }
+
+  getArtists(){
+    return this.artistsList;
+  }
+
+  getArtistById(id){
+    return this.artistsList.find(artist => artist.id === id);
   }
 
   getArtistByName(name) {
@@ -220,7 +251,7 @@ class UNQfy {
   }
 
   getArtistsMatchingParcialName(parcialName) {
-    return this.artistsList.filter(artist => artist.name.includes(parcialName));
+    return this.artistsList.filter(artist => artist.name.toLowerCase().includes(parcialName.toLowerCase()));
   }
 
   getAlbumsMatchingParcialName(parcialName) {
