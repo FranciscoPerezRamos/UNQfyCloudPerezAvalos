@@ -19,38 +19,52 @@ class Artist {
   getAllTracks(){
     let tracks = [];
 
-    this.albums.map((album) => album.tracklist).forEach((tracklist)=>
+    this.albums.map((album) => album.tracks).forEach((tracks)=>
     {
-      tracks = tracks.concat(tracklist);
+      tracks = tracks.concat(tracks);
     });
 
     return tracks;
   }
+
+  getAlbumById(id) {
+    return this.albums.find(album => album.id === id);
+  }
+
+  deleteAlbum(id){
+    for(let i = this.albums.length - 1; i >= 0; i--) {
+      if(this.albums[i].id === id) {
+        this.albums.splice(i, 1);
+      }
+    }
+  }
+
 }
 
 
 class Album {
 
-  constructor(albumName, albumYear){
+  constructor(id, albumName, albumYear){
+    this.id = id;
     this.name = albumName;
     this.year = albumYear;
-    this.tracklist = [];
+    this.tracks = [];
   }
 
   genres(){
     let genres = [];
-    this.tracklist.forEach((track) => {
+    this.tracks.forEach((track) => {
       genres = genres.concat(track.genre);
     });
     return genres.unique();
   }
 
   getTrack(name){
-    return this.tracklist.find(track => track.name === name);
+    return this.tracks.find(track => track.name === name);
   }
 
   hasATrack(track){
-    return this.tracklist.includes(track);
+    return this.tracks.includes(track);
   }
 
 }
@@ -130,14 +144,14 @@ class Track {
 
 class Playlist {
 
-  constructor(playlistName, tracklist, duration){
+  constructor(playlistName, tracks, duration){
     this.name = playlistName;
-    this.tracklist = tracklist;
+    this.tracks = tracks;
     this.duration = duration;
   }
 
   hasTrack(aTrack){
-    return this.tracklist.includes(aTrack);
+    return this.tracks.includes(aTrack);
   }
 
 }
@@ -149,6 +163,7 @@ class UNQfy {
     this.artistsList = new Array();
     this.playlistsList = new Array();
     this.ids = 0;
+    this.idsAlbums = 0;
   }
 
   getArtistIDByNameSpotify(name){
@@ -195,12 +210,11 @@ class UNQfy {
 
 
   deleteArtist(artist){
-  for(let i = this.artistsList.length - 1; i >= 0; i--) {
+    for(let i = this.artistsList.length - 1; i >= 0; i--) {
       if(this.artistsList[i].name === artist.name) {
         this.artistsList.splice(i, 1);
       }
-   }
-
+    }
   }
 
   addArtist(params) {
@@ -208,13 +222,31 @@ class UNQfy {
     this.ids = this.ids + 1;
   }
 
+  deleteAlbum(albumId){
+  
+    this.artistsList.forEach((artist) => {
+      if(artist.getAlbumById(albumId) !== undefined){ //TODO: Handlear error.
+        artist.deleteAlbum(albumId);
+        return;
+      }
+    })
+
+  }
+
+  addAlbumById(artistId, params){
+    const albumNew = new Album(this.idsAlbums, params.name, params.year);
+    this.getArtistById(artistId).addAlbum(albumNew);
+    this.idsAlbums = this.idsAlbums + 1;
+  }
+
   addAlbum(artistName, params) {
-    const albumNew = new Album(params.name, params.year);
+    const albumNew = new Album(this.idsAlbums, params.name, params.year);
     this.getArtistByName(artistName).addAlbum(albumNew);
+    this.idsAlbums = this.idsAlbums + 1;
   }
 
   addTrack(albumName, params) {
-    this.getAlbumByName(albumName).tracklist.push(
+    this.getAlbumByName(albumName).tracks.push(
       new Track(albumName, params.name, params.duration, params.genre));
   }
 
@@ -232,6 +264,10 @@ class UNQfy {
 
   getAlbumByName(name) {
     return this.getAllAlbums().find(album => album.name === name);
+  }
+
+  getAlbumById(id) {
+    return this.getAllAlbums().find(album => album.id === id);
   }
 
   getTrackByName(name) {
@@ -255,7 +291,7 @@ class UNQfy {
   }
 
   getAlbumsMatchingParcialName(parcialName) {
-    return this.getAllAlbums().filter(album => album.name.includes(parcialName));
+    return this.getAllAlbums().filter(album => album.name.toLowerCase().includes(parcialName));
   }
 
   getTracksMatchingParcialName(parcialName) {
@@ -294,21 +330,21 @@ class UNQfy {
       listOfTracksAndTime.time));
   }
 
-  cutPlaylistByDuration(tracklist, maxDuration){
+  cutPlaylistByDuration(tracks, maxDuration){
 
     let accumulatedTime = 0;
-    const newTrackList = [];
+    const newtracks = [];
 
-    tracklist.forEach(track => {
+    tracks.forEach(track => {
       if(track.duration + accumulatedTime < maxDuration){
-        newTrackList.push(track);
+        newtracks.push(track);
         accumulatedTime = accumulatedTime + track.duration;
       }
       else{
-        return {tracks: newTrackList, time: accumulatedTime};
+        return {tracks: newtracks, time: accumulatedTime};
       }
     });
-    return {tracks: newTrackList, time: accumulatedTime};
+    return {tracks: newtracks, time: accumulatedTime};
   }
 
   save(filename = 'unqfy.json') {

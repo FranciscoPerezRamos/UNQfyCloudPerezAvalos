@@ -99,6 +99,14 @@ function main() {
     unqfy.populateAlbumsForArtist(process.argv[3]).then((response) => saveUNQfy(response, 'unqfy.txt'));
     break;
 
+  case 'getAllAlbums':
+    console.log(unqfy.getAllAlbums());
+    break;
+
+  case 'getAlbumById':
+  console.log(unqfy.getAlbumById(parseInt(process.argv[3])));
+  break;
+
   case 'getLyricsFromTrack':
     unqfy.getTrackByName(process.argv[3]).getLyrics().then((lyric) => console.log(lyric));
       

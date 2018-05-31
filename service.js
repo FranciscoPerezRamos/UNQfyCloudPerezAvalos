@@ -25,8 +25,6 @@ function saveUNQfy(unqfy, filename) {
   unqfy.save(filename);
 }
 
-
-
 router.use(function(req,res,next){
     console.log('Request received');
     next();
@@ -40,6 +38,7 @@ app.use(bodyParser.json());
 
 app.use('/api', router);
 
+//#region Artists
 router.route('/artists').post((req,res) => { 
 
     const unqfy = getUNQfy('unqfy.txt');
@@ -62,7 +61,7 @@ router.route('/artists/:id').get((req, res) => {
     })
     
     
-router.route('/artist/:id').delete((req, res) => {
+router.route('/artists/:id').delete((req, res) => {
   
   const unqfy = getUNQfy('unqfy.txt');
 
@@ -76,13 +75,11 @@ router.route('/artist/:id').delete((req, res) => {
   }
   else{
     unqfy.deleteArtist(artist);
+    res.end()
     saveUNQfy(unqfy,'unqfy.txt');
   }
 
-
-
 })
-
 
 
 router.route('/artists').get((req, res) => { 
@@ -96,11 +93,63 @@ router.route('/artists').get((req, res) => {
     res.json(unqfy.getArtistsMatchingParcialName(req.query.name));
   }
 
+})
+//#endregion Artists
+
+//#region Albums
+router.route('/albums').post((req, res) => {
   
-  })
+  const unqfy = getUNQfy('unqfy.txt');
 
+  unqfy.addAlbumById(req.body.artistId, {name: req.body.name, year: req.body.year});
 
+  res.json(unqfy.getAlbumByName(req.body.name));
 
+  saveUNQfy(unqfy, 'unqfy.txt')
+
+})
+
+router.route('/albums/:id').get((req, res) => {
+  
+  const unqfy = getUNQfy('unqfy.txt');
+
+  res.json(unqfy.getAlbumById(parseInt(req.params.id)));
+
+})
+
+router.route('/albums/:id').delete((req, res) => {
+
+  const unqfy = getUNQfy('unqfy.txt');
+
+  const album = unqfy.getAlbumById(parseInt(req.params.id));
+
+  if(album === undefined){
+    res.json({
+      statusCode: '404',
+      message: 'Error_album_not_found'
+    })
+  }
+  else{
+    unqfy.deleteAlbum(parseInt(req.params.id));
+
+    res.end();
+
+    saveUNQfy(unqfy, 'unqfy.txt')
+  }
+})
+
+router.route('/albums').get((req, res) => {
+
+  const unqfy = getUNQfy('unqfy.txt');
+
+  if(req.query.name === undefined){
+    res.json(unqfy.getAllAlbums());
+  }else{
+    res.json(unqfy.getAlbumsMatchingParcialName(req.query.name));
+  }
+})
+
+//#endregion Albums
 
 app.listen(port);
 console.log('Magic happens on port ' + port);
