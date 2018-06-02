@@ -63,3 +63,8 @@ class unexpectedFailure extends ApiError{
         super('unexpectedFailure', 500 , 'UNEXPECTED_FAILURE');    
     }
 }
+
+
+module.exports = {
+    ErrorDuplicateEntry, 
+  };

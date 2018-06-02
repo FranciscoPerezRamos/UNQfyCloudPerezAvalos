@@ -1,5 +1,6 @@
 const picklejs = require('picklejs');
 const rp = require('request-promise');
+const apiError = require('./apiError');
 const token = 'BQBnX6Xt9f91qDYwmNVPAYdFhjg2UXDjx69wJosLWhmYR-MY-eGZ2b1CintE33cUQLmfgmSyJvZDY71MxfpuLuD1uxjWQHBPh6ret0SHd_c9t9ccH5m1EHVsnFoaRYfjjdEWJg_Leg4vyrDxh7GN9m0FkdUEZVt2gXw-9GkCgzCQBRR4JQ';
 const BASE_URLMM = 'http://api.musixmatch.com/ws/1.1';
 
@@ -218,8 +219,15 @@ class UNQfy {
   }
 
   addArtist(params) {
-    this.artistsList.push(new Artist(this.ids,params.name, params.country));
-    this.ids = this.ids + 1;
+
+      if(this.getArtistByName(params.name) === undefined){
+        this.artistsList.push(new Artist(this.ids,params.name, params.country));
+        this.ids = this.ids + 1;
+      }
+      else{
+        throw new apiError.ErrorDuplicateEntry();
+      }
+      
   }
 
   deleteAlbum(albumId){

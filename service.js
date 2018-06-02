@@ -1,5 +1,5 @@
 
-
+const rp = require('request-promise'); 
 const express = require('express');
 const app = express();
 const router = express.Router();
@@ -39,15 +39,18 @@ app.use(bodyParser.json());
 app.use('/api', router);
 
 //#region Artists
-router.route('/artists').post((req,res) => { 
+router.route('/artists').post((req,res,next) => { 
 
     const unqfy = getUNQfy('unqfy.txt');
-  
-    unqfy.addArtist({name :req.body.name,country: req.body.country});
-  
-    saveUNQfy(unqfy,'unqfy.txt');
-  
-    res.json(unqfy.getArtistByName(req.body.name));
+
+    try {
+      unqfy.addArtist({name :req.body.name,country: req.body.country})
+      saveUNQfy(unqfy,'unqfy.txt');
+      res.json(unqfy.getArtistByName(req.body.name));
+    } catch (error) {
+      res.status(409);
+      res.json({status: error.status, errorCode: error.errorCode});
+    }
   
   })
 
@@ -56,7 +59,7 @@ router.route('/artists/:id').get((req, res) => {
 
     const unqfy = getUNQfy('unqfy.txt');
     
-    res.json(unqfy.getArtistById(parseInt(req.params.id)));
+    res.json(unqfy.getArtistById(req.params.id));
     
     })
     
@@ -67,15 +70,16 @@ router.route('/artists/:id').delete((req, res) => {
 
   const artist = unqfy.getArtistById(parseInt(req.params.id));
 
-  if(artist === null){
+  if(artist === undefined){
     res.json({
       statusCode: '404',
       message: 'Error_artist_not_found'
     })
+    res.end();  
   }
   else{
     unqfy.deleteArtist(artist);
-    res.end()
+    res.end();
     saveUNQfy(unqfy,'unqfy.txt');
   }
 
@@ -101,6 +105,13 @@ router.route('/albums').post((req, res) => {
   
   const unqfy = getUNQfy('unqfy.txt');
 
+  const artist = unqfy.getArtistById(parseInt(req.body.artistId));
+
+  if(artist === undefined){
+    res.json('{"statusCode": 404, "message": "Error_artist_not_found"}') 
+    return;
+  }
+  
   unqfy.addAlbumById(req.body.artistId, {name: req.body.name, year: req.body.year});
 
   res.json(unqfy.getAlbumByName(req.body.name));
