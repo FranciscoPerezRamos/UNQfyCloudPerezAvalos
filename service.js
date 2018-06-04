@@ -31,13 +31,13 @@ function saveUNQfy(unqfy, filename) {
 function errorHandler(err, req, res, next) {
   console.error(err.name); // imprimimos el error en consola
   // Chequeamos que tipo de error es y actuamos en consecuencia
-  if (err instanceof Error){
+  if (err instanceof apiError.ApiError){
     res.status(err.status);
     res.json({status: err.status, errorCode: err.errorCode});
   } else if (err.type === 'entity.parse.failed'){
   // body-parser error para JSON invalido
     res.status(err.status);
-    res.json({status: err.status, errorCode: 'INVALID_JSON'});
+    res.json({status: err.status, errorCode: 'BAD_REQUEST'});
   } else {
   // continua con el manejador de errores por defecto
     next(err);
@@ -146,12 +146,16 @@ router.route('/albums').get((req, res) => {
   }
 })
 
+app.all('*', (req, res, next) => {
+  next(new apiError.InvalidURL());
+});
+
   app.use(errorHandler);
 
 //#endregion Albums
 
 app.listen(port);
-console.log('Magic happens on port ' + port);
+console.log('El servicio de UNQfy se encuentra funcionando en el puerto: ' + port);
 
 
 

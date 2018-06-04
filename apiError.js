@@ -2,9 +2,6 @@
 
 
 class ApiError extends Error{
-
-
-
     constructor(name, status, errorCode, meassage = null){
         super(meassage || name);
         this.name = name;
@@ -66,6 +63,7 @@ class UnexpectedFailure extends ApiError{
 
 
 module.exports = {
+    ApiError,
     ErrorDuplicateEntry,
     ErrorCantAddAlbumToANonExistingArtist,
     InvalidURL,
