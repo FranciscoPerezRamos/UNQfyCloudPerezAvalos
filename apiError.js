@@ -27,7 +27,7 @@ class ErrorDuplicateEntry extends ApiError{
 class ErrorCantAddAlbumToANonExistingArtist extends ApiError{
 
     constructor(){
-        super('ErrorCantAddAlbumToANonExistingArtist', 404, 'RELATED_SOURCE_NOT_FOUND');    
+        super('ErrorCantAddAlbumToANonExistingArtist', 404, 'RELATED_RESOURCE_NOT_FOUND');    
     }
 }
 
@@ -39,9 +39,9 @@ class InvalidURL extends ApiError{
 }
 
 
-class addOrFindANonExistingArtist extends ApiError{
+class DeleteOrFindANonExistingArtistOrAlbum extends ApiError{
     constructor(){
-        super('addOrFindANonExistingArtist', 404, 'RESOURCE_ALREADY_EXISTS');    
+        super('DeleteOrFindANonExistingArtistOrAlbum', 404, 'RESOURCE_NOT_FOUND');    
     }
 }
 
@@ -52,19 +52,25 @@ class InvalidJason extends ApiError{
     }
 }
 
-class missingAnArgumentOnJsonToAddAnArtistOrAlbum extends ApiError{
+class MissingAnArgumentOnJsonToAddAnArtistOrAlbum extends ApiError{
     constructor(){
-        super('missingAnArgumentOnJsonToAddAnArtistOrAlbum', 400, 'BAD_REQUEST');    
+        super('MissingAnArgumentOnJsonToAddAnArtistOrAlbum', 400, 'BAD_REQUEST');    
     }
 }
 
-class unexpectedFailure extends ApiError{
+class UnexpectedFailure extends ApiError{
     constructor(){
-        super('unexpectedFailure', 500 , 'UNEXPECTED_FAILURE');    
+        super('UnexpectedFailure', 500 , 'UNEXPECTED_FAILURE');    
     }
 }
 
 
 module.exports = {
-    ErrorDuplicateEntry, 
+    ErrorDuplicateEntry,
+    ErrorCantAddAlbumToANonExistingArtist,
+    InvalidURL,
+    DeleteOrFindANonExistingArtistOrAlbum,
+    InvalidJason,
+    MissingAnArgumentOnJsonToAddAnArtistOrAlbum,
+    UnexpectedFailure,
   };

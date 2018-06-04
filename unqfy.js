@@ -211,37 +211,55 @@ class UNQfy {
 
 
   deleteArtist(artist){
-    for(let i = this.artistsList.length - 1; i >= 0; i--) {
-      if(this.artistsList[i].name === artist.name) {
-        this.artistsList.splice(i, 1);
+    this.remove(this.artistsList, artist);
+  }
+
+  remove(list, object){
+    for(let i = list.length - 1; i >= 0; i--) {
+      if(list[i] === object) {
+        list.splice(i, 1);
+        return;
       }
     }
   }
 
-  addArtist(params) {
 
-      if(this.getArtistByName(params.name) === undefined){
-        this.artistsList.push(new Artist(this.ids,params.name, params.country));
-        this.ids = this.ids + 1;
+  deleteArtistById(artistId){
+    this.remove(this.artistsList, this.getArtistById(artistId));
+  }
+
+  addArtist(params) {
+      if(params.name === undefined || params.country === undefined){
+        throw new apiError.MissingAnArgumentOnJsonToAddAnArtistOrAlbum();
       }
-      else{
+      if(this.getArtistByName(params.name) !== undefined){
         throw new apiError.ErrorDuplicateEntry();
       }
+        this.artistsList.push(new Artist(this.ids,params.name, params.country));
+        this.ids = this.ids + 1;
       
   }
 
   deleteAlbum(albumId){
-  
+    const album = this.getAlbumById(albumId);
     this.artistsList.forEach((artist) => {
-      if(artist.getAlbumById(albumId) !== undefined){ //TODO: Handlear error.
-        artist.deleteAlbum(albumId);
-        return;
-      }
+       if(artist.getAlbumById(albumId) == album){
+         this.remove(artist.albums, album);
+         return;
+       }
     })
-
   }
 
   addAlbumById(artistId, params){
+    if(artistId === undefined || params.name === undefined || params.year === undefined){
+      throw new apiError.MissingAnArgumentOnJsonToAddAnArtistOrAlbum();
+    }
+    if(this.artistsList.find((artist) => artist.id === artistId) === undefined){
+      throw new apiError.ErrorCantAddAlbumToANonExistingArtist();
+    }
+    if(this.getAlbumByName(params.name) !== undefined){
+      throw new apiError.ErrorDuplicateEntry();
+    }
     const albumNew = new Album(this.idsAlbums, params.name, params.year);
     this.getArtistById(artistId).addAlbum(albumNew);
     this.idsAlbums = this.idsAlbums + 1;
@@ -263,7 +281,11 @@ class UNQfy {
   }
 
   getArtistById(id){
-    return this.artistsList.find(artist => artist.id === id);
+    const artist = this.artistsList.find(artist => artist.id === id);
+    if(artist === undefined){
+      throw new apiError.DeleteOrFindANonExistingArtistOrAlbum();
+    }
+    return artist;
   }
 
   getArtistByName(name) {
@@ -275,7 +297,11 @@ class UNQfy {
   }
 
   getAlbumById(id) {
-    return this.getAllAlbums().find(album => album.id === id);
+    const album = this.getAllAlbums().find(album => album.id === id);
+    if(album === undefined){
+      throw new apiError.DeleteOrFindANonExistingArtistOrAlbum();
+    } 
+    return album;
   }
 
   getTrackByName(name) {

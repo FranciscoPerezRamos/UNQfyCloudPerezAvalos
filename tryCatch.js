@@ -1,7 +1,14 @@
 
-let artistJSON = '{"name": "Lucas"}';
+let artist = '{"name": "Lucas"}';
+console.log(artist);
 
-let artist = JSON.parse(artistJSON); 
+artist = JSON.stringify(artist);
+console.log(artist);
+
+artist = JSON.parse(artist)
+
+console.log(artist);
+
 
 try {
     if(!artist.country){
