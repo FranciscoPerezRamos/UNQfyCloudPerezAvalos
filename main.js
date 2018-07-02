@@ -107,6 +107,10 @@ function main() {
   console.log(unqfy.getAlbumById(parseInt(process.argv[3])));
   break;
 
+  case 'getAllTracks':
+  console.log(unqfy.getAllTracks());
+  break;
+
   case 'getLyricsFromTrack':
     unqfy.getTrackByName(process.argv[3]).getLyrics().then((lyric) => console.log(lyric));
       

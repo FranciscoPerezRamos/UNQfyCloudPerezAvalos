@@ -103,6 +103,7 @@ router.route('/artists').get((req, res) => {
   }
 
 })
+
 //#endregion Artists
 
 //#region Albums

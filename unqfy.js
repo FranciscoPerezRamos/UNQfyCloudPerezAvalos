@@ -1,7 +1,7 @@
 const picklejs = require('picklejs');
 const rp = require('request-promise');
 const apiError = require('./apiError');
-const token = 'BQBnX6Xt9f91qDYwmNVPAYdFhjg2UXDjx69wJosLWhmYR-MY-eGZ2b1CintE33cUQLmfgmSyJvZDY71MxfpuLuD1uxjWQHBPh6ret0SHd_c9t9ccH5m1EHVsnFoaRYfjjdEWJg_Leg4vyrDxh7GN9m0FkdUEZVt2gXw-9GkCgzCQBRR4JQ';
+const token = 'BQAUrW7tzi0MtGyCTfyGM3DP5mP3nf0eplDqREoClfazvE5KwK1UxGwWONNubxcuoIeqMLT3rDdePPFeDcwFziP7JK57YoCtQv9r2dvupDBIz6W0_PbOW8aP8gd_43l8ply5Nv2jjn8MSYnGER9IPlrIsS-ko5gNhY-dGFWDyORKaa3QkQ';
 const BASE_URLMM = 'http://api.musixmatch.com/ws/1.1';
 
 class Artist {
@@ -18,14 +18,14 @@ class Artist {
   }
 
   getAllTracks(){
-    let tracks = [];
+    let tracksList = [];
 
     this.albums.map((album) => album.tracks).forEach((tracks)=>
     {
-      tracks = tracks.concat(tracks);
+      tracksList = tracks.concat(tracksList);
     });
 
-    return tracks;
+    return tracksList;
   }
 
   getAlbumById(id) {
@@ -195,7 +195,7 @@ class UNQfy {
         console.log(response.items);
         return response.items;
       })
-      .catch((error) => console.log('Algo salio mal, puede que no exista ese ID', error));  
+      .catch((error) => console.log('Algo salio mal, puede que no exista ese ID'));  
   }
 
   populateAlbumsForArtist(artistName){
