@@ -19,7 +19,7 @@ class Artist {
   addAlbum(album){
     this.albums.push(album);
     
-    observer.change(this, album, "addAlbum");
+    observer.change(this, {album: album, change: "addAlbum"});
 
   }
 
@@ -218,6 +218,8 @@ class UNQfy {
 
   deleteArtist(artist){
     this.remove(this.artistsList, artist);
+    observer.change(artist, {album: null, change: "deleteArtist"})
+    
   }
 
   remove(list, object){

@@ -101,7 +101,6 @@ router.route('/notify').post((req,res,next) => {
   subjet = req.body.subjet;
   message = req.body.message;
   from = req.body.from;
-  console.log("Le pegó a notify")
   existingArtist(artistId).then(responde => {
     if(responde){    
       notificationService.notify(artistId, subjet, message, from)
@@ -121,7 +120,7 @@ router.route('/suscriptions').get((req,res,next) => {
       suscriptions = notificationService.suscriptions(artistId)
       res.json({
         "artistId": artistId,
-        "suscriptions": suscriptions
+        "suscriptions": suscriptions,
         });    
     }else{
         next(new apiError.NotExistingArtist());

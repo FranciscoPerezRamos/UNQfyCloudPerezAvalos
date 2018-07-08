@@ -27,13 +27,12 @@ app.use('/api', router);
         }
 
         notify(artistId, subjet, message, from){
-            console.log("Llego al servicio")
             this.sendMail(artistId, subjet, message, from, this.suscribersMailsForArtistId(artistId));
         }
 
         suscriptions(artistId){
             let suscriptions = [];
-            for(let i = this.suscribers - 1; i >= 0; i--) {
+            for(let i = 0 ; i < this.suscribers.length; i++) {
                 if(this.suscribers[i].artistId === artistId) {
                     suscription.push(this.suscribes[i]);
                 }
@@ -51,7 +50,7 @@ app.use('/api', router);
 
         suscribersMailsForArtistId(artistId){
             let mails = "";
-            for(let i = this.suscribers - 1; i >= 0; i--) {
+            for(let i = 0 ; i < this.suscribers.length; i++) {
                 if(this.suscribers[i].artistId === artistId) {
                     mails = mails + this.suscribers[i].email + ", ";
                 }
