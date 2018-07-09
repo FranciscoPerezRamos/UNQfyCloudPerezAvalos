@@ -1,13 +1,13 @@
 const picklejs = require('picklejs');
 const rp = require('request-promise');
 const apiError = require('./apiError');
-const observerMod = require('./observer')
+const notifierMod = require('./notifier')
 const token = 'BQAUrW7tzi0MtGyCTfyGM3DP5mP3nf0eplDqREoClfazvE5KwK1UxGwWONNubxcuoIeqMLT3rDdePPFeDcwFziP7JK57YoCtQv9r2dvupDBIz6W0_PbOW8aP8gd_43l8ply5Nv2jjn8MSYnGER9IPlrIsS-ko5gNhY-dGFWDyORKaa3QkQ';
 const BASE_URLMM = 'http://api.musixmatch.com/ws/1.1';
 
-const observer = new observerMod.Observer();
+const notifier = new notifierMod.Notifier();
 
-class Artist {
+class Artist extends Observable{
 
   constructor(id, name, country){
     this.id = id;
@@ -18,8 +18,7 @@ class Artist {
 
   addAlbum(album){
     this.albums.push(album);
-    
-    observer.change(this, {album: album, change: "addAlbum"});
+    this.notify(this, {album: album, change: "addAlbum"});
 
   }
 

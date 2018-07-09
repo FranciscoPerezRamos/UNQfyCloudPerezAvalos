@@ -1,38 +1,47 @@
-const rp = require('request-promise');
 
-class Observer{
 
-    change(artist, params){
+class Observer {
 
-        switch(params.change){
-            case 'addAlbum':
-                const addOptions = {
-                    url: 'http://localhost:5001/api/notify',
-                    body: {
-                        "artistId": artist.id,
-                        "subjet": `Nuevo album para artista ${artist.name}`,
-                        "message": `Se ha agregado el album ${params.album.name} al artista ${artist.name}`,
-                        "from": '"UNQFY" lospibes.unqfy.notifier@gmail.com',
-                    },
-                    json: true,
-                };
-                rp.post(addOptions);              
-                break;
-
-            case 'deleteArtist':
-                const options = {
-                    url: 'http://localhost:5001/api/suscriptions',
-                    body:{
-                        "artistId": artist.id,
-                    },
-                    json: true,
-                };
-                rp.delete(options);
-        }
+    change(object, params){
+        // Recive un objeto el cual ha cambiado y recibe un parametro el cual tiene
+        // un string el cual representa el cambio del object.
     }
 
 }
 
+
+class Observable {
+
+    constructor(){
+        this.observers = [];
+    }
+
+
+    addObserver(observer){
+        if(!(observer in this.observers)){
+            this.observers.push(observer);
+        }
+    }
+
+
+    deleteObserver(observer){
+        this.observers = this.observers.filter(observer_ => observer_ !== observer);
+    }
+
+
+    notify(object, data){
+        if(!this.observers){
+            this.observers.forEach(observer =>{
+            observer.change(object, data); 
+        })
+        }
+    }
+
+
+}
+
+
 module.exports = {
+    Observable,
     Observer, 
   };
