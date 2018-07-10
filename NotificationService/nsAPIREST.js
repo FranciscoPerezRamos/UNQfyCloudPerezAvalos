@@ -44,9 +44,8 @@ app.use(bodyParser.json());
 
 app.use('/api', router);
 
-//const BASE_URL = 'http://localhost:5000/api' // for localHost
-const BASE_URL = 'http://172.20.0.21:5000/api' // for docker
-
+const BASE_URL = 'http://localhost:5000/api'
+//const BASE_URL = 'http://172.20.0.21:5000/api'
 function existingArtist(artistId){
   const options = {
       url: `${BASE_URL}/artists/${artistId}`,
@@ -65,7 +64,7 @@ router.route('/suscribe').post((req,res,next) => {
 
     artistId = req.body.artistId;
     email = req.body.email;
- 
+
     existingArtist(artistId).then(responde => {
       if(responde){
         notificationService.suscribe(artistId, email)
@@ -86,7 +85,7 @@ router.route('/unsuscribe').post((req,res,next) => {
   existingArtist(artistId).then(responde => {
     if(responde){    
       notificationService.unsuscribe(artistId, email)
-      res.json({prueba: 'ejemplo'});
+      res.end();
     }else{
         next(new apiError.NotExistingArtist());
     }
@@ -112,12 +111,12 @@ router.route('/notify').post((req,res,next) => {
   });
 })
 
-router.route('/suscriptions').get((req,res,next) => { 
+router.route('/suscriptions/:id').get((req,res,next) => { 
 
-  artistId = req.body.artistId;
+  const artistId = req.params.id;
   
   existingArtist(artistId).then(responde => {
-    if(responde){    
+    if(responde){
       suscriptions = notificationService.suscriptions(artistId)
       res.json({
         "artistId": artistId,
@@ -130,9 +129,9 @@ router.route('/suscriptions').get((req,res,next) => {
   
 })
 
-router.route('/suscriptions').delete((req,res,next) => { 
+router.route('/suscriptions/:id').delete((req,res,next) => { 
 
-  artistId = req.body.artistId;
+  artistId = req.params.id;
 
   existingArtist(artistId).then(responde => {
     if(responde){    
