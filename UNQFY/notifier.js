@@ -1,6 +1,6 @@
 const rp = require('request-promise');
 
-class Notifier extends Observer{
+class Notifier{
 
     change(artist, params){
 
@@ -21,10 +21,7 @@ class Notifier extends Observer{
 
             case 'deleteArtist':
                 const options = {
-                    url: 'http://localhost:5001/api/suscriptions',
-                    body:{
-                        "artistId": artist.id,
-                    },
+                    url: `http://localhost:5001/api/suscriptions/${artist.id}`,
                     json: true,
                 };
                 rp.delete(options);

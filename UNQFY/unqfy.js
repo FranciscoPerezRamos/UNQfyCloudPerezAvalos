@@ -7,7 +7,7 @@ const BASE_URLMM = 'http://api.musixmatch.com/ws/1.1';
 
 const notifier = new notifierMod.Notifier();
 
-class Artist extends Observable{
+class Artist{
 
   constructor(id, name, country){
     this.id = id;
@@ -18,8 +18,7 @@ class Artist extends Observable{
 
   addAlbum(album){
     this.albums.push(album);
-    this.notify(this, {album: album, change: "addAlbum"});
-
+    notifier.change(this, {album: album, change: "addAlbum"});
   }
 
   getAllTracks(){
@@ -214,10 +213,9 @@ class UNQfy {
       });
   }
 
-
   deleteArtist(artist){
     this.remove(this.artistsList, artist);
-    observer.change(artist, {album: null, change: "deleteArtist"})
+    notifier.change(artist, {album: null, change: "deleteArtist"})
     
   }
 
@@ -230,9 +228,10 @@ class UNQfy {
     }
   }
 
-
   deleteArtistById(artistId){
-    this.remove(this.artistsList, this.getArtistById(artistId));
+    const artist = this.getArtistById(artistId);
+    this.remove(this.artistsList, artist);
+    notifier.change(artist, {album: null, change: "deleteArtist"})
   }
 
   addArtist(params) {

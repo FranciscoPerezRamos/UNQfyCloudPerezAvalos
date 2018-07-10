@@ -85,7 +85,7 @@ router.route('/unsuscribe').post((req,res,next) => {
   existingArtist(artistId).then(responde => {
     if(responde){    
       notificationService.unsuscribe(artistId, email)
-      res.json({prueba: 'ejemplo'});
+      res.end();
     }else{
         next(new apiError.NotExistingArtist());
     }
@@ -111,12 +111,12 @@ router.route('/notify').post((req,res,next) => {
   });
 })
 
-router.route('/suscriptions').get((req,res,next) => { 
+router.route('/suscriptions/:id').get((req,res,next) => { 
 
-  artistId = req.body.artistId;
+  const artistId = req.params.id;
   
   existingArtist(artistId).then(responde => {
-    if(responde){    
+    if(responde){
       suscriptions = notificationService.suscriptions(artistId)
       res.json({
         "artistId": artistId,
@@ -129,9 +129,9 @@ router.route('/suscriptions').get((req,res,next) => {
   
 })
 
-router.route('/suscriptions').delete((req,res,next) => { 
+router.route('/suscriptions/:id').delete((req,res,next) => { 
 
-  artistId = req.body.artistId;
+  artistId = req.params.id;
 
   existingArtist(artistId).then(responde => {
     if(responde){    

@@ -9,8 +9,8 @@
     "__00001__": {
       "artistsList": "__00002__",
       "playlistsList": "__00003__",
-      "ids": 1,
-      "idsAlbums": 1
+      "ids": 2,
+      "idsAlbums": 0
     },
     "__00002__": {
       "0": "__00004__"
@@ -18,28 +18,17 @@
     "__00003__": {},
     "__00004__": {
       "id": 0,
-      "name": "Guns n' Roses",
+      "name": "Red Hot Chili Peppers",
       "albums": "__00005__",
       "country": "USA"
     },
-    "__00005__": {
-      "0": "__00006__"
-    },
-    "__00006__": {
-      "id": 0,
-      "name": "Appetitsdfsdfssdfdfssfdsdfsf",
-      "year": 1987,
-      "tracks": "__00007__"
-    },
-    "__00007__": {}
+    "__00005__": {}
   },
   "types": {
     "__00001__": "UNQfy",
     "__00002__": "Array",
     "__00003__": "Array",
     "__00004__": "Artist",
-    "__00005__": "Array",
-    "__00006__": "Album",
-    "__00007__": "Array"
+    "__00005__": "Array"
   }
 }

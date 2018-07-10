@@ -75,7 +75,6 @@ router.route('/artists').post((req,res,next) => {
 router.route('/artists/:id').get((req, res) => { 
 
     const unqfy = getUNQfy('unqfy.txt');
-    
     res.json(unqfy.getArtistById(parseInt(req.params.id)));
     
     })

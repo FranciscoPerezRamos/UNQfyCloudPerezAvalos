@@ -23,7 +23,7 @@ app.use('/api', router);
         }
 
         unsuscribe(artistId, email){    
-            this.deleteSuscriber(new Suscriber(artistId, email));
+            this.suscribers = this.suscribers.filter(sub => sub.artistId != artistId  && sub.email != email );
         }
 
         notify(artistId, subjet, message, from){
@@ -33,19 +33,15 @@ app.use('/api', router);
         suscriptions(artistId){
             let suscriptions = [];
             for(let i = 0 ; i < this.suscribers.length; i++) {
-                if(this.suscribers[i].artistId === artistId) {
-                    suscription.push(this.suscribes[i]);
+                if(this.suscribers[i].artistId == artistId) {
+                    suscriptions.push(this.suscribers[i]);
                 }
             }
             return suscriptions;
         }
 
         deleteSuscriptions(artistId){
-            this.suscribers = this.suscribers.filter( sub => sub.artistId !== artistId );
-        }
-
-        deleteSuscriber(artistId, email){
-            this.suscribers = this.suscribers.filter( sub => sub.artistId !== artistId  && sub.email !== email );
+            this.suscribers = this.suscribers.filter(sub => sub.artistId != artistId );
         }
 
         suscribersMailsForArtistId(artistId){
