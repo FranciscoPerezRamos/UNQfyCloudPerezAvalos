@@ -22,7 +22,7 @@ function getUNQfy(filename) {
 
 // Guarda el estado de UNQfy en filename
 function saveUNQfy(unqfy, filename) {
-  console.log();
+  
   unqfy.save(filename);
 }
 

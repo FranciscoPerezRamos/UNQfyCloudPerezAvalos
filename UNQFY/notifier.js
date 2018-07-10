@@ -9,7 +9,7 @@ class Notifier {
             case 'addAlbum':
                 const addOptions = {
                     url: 'http://localhost:5001/api/notify',
-                    //url: 'http://172.20.0.21:5001/api/notify',
+                    //url: 'http://172.20.0.22:5001/api/notify',
                     body: {
                         "artistId": artist.id,
                         "subjet": `Nuevo album para artista ${artist.name}`,
@@ -24,7 +24,7 @@ class Notifier {
             case 'deleteArtist':
                 const options = {
                     url: `http://localhost:5001/api/suscriptions/${artist.id}`,
-                    //url: `http://172.20.0.21:5001/api/suscriptions/${artist.id}`,
+                    //url: `http://172.20.0.22:5001/api/suscriptions/${artist.id}`,
                     json: true,
                 };
                 rp.delete(options);

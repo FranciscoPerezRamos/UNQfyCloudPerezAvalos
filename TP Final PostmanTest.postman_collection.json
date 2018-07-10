@@ -133,7 +133,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\"artistId\": 0,\n\"email\": \"franperez21896@gmail.com\"\n}"
+					"raw": "{\n\"artistId\": 1,\n\"email\": \"franperez21896@gmail.com\"\n}"
 				},
 				"url": {
 					"raw": "http://localhost:5001/api/suscribe",
@@ -180,7 +180,37 @@
 			"response": []
 		},
 		{
-			"name": "getSuscribers",
+			"name": "getSuscribers0",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\": \"RedHotAlbum\",\n\"year\": \"1996\",\n\"artistId\": 0\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5001/api/suscriptions/0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"suscriptions",
+						"0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getSuscribers1",
 			"request": {
 				"method": "GET",
 				"header": [
