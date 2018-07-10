@@ -1,0 +1,302 @@
+{
+	"info": {
+		"_postman_id": "34ab37e2-54e4-4b20-b000-7f8ecdf784cb",
+		"name": "TP Final PostmanTest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add an artist red hot",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\": \"Guns n' Roses\",\n\"country\": \"USA\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/artists",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"artists"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add an artist guns n roses",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\": \"Guns n' Roses\",\n\"country\": \"USA\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/artists",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"artists"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addAlbum",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\": \"Californication\",\n\"year\": \"1996\",\n\"artistId\": 0\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/albums",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"albums"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "suscribeToArtist0",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"artistId\": 0,\n\"email\": \"franperez21896@gmail.com\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5001/api/suscribe",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"suscribe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "suscribeToArtist1",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"artistId\": 0,\n\"email\": \"franperez21896@gmail.com\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5001/api/suscribe",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"suscribe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddOtherAlbum",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\": \"RedHotAlbum\",\n\"year\": \"1996\",\n\"artistId\": 0\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/albums",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"albums"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getSuscribers",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\": \"RedHotAlbum\",\n\"year\": \"1996\",\n\"artistId\": 0\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5001/api/suscriptions/0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"suscriptions",
+						"0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteSuscriptions",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:5001/api/suscriptions/0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"suscriptions",
+						"0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "unsuscribe",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"artistId\": 0,\n\t\"email\": \"franperez21896@gmail.com\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5001/api/unsuscribe",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"unsuscribe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteArtistById",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/artists/0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"artists",
+						"0"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
