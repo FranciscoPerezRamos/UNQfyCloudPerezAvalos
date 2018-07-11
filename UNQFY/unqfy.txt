@@ -9,8 +9,8 @@
     "__00001__": {
       "artistsList": "__00002__",
       "playlistsList": "__00003__",
-      "ids": 2,
-      "idsAlbums": 1
+      "ids": 1,
+      "idsAlbums": 2
     },
     "__00002__": {
       "0": "__00004__"
@@ -18,20 +18,38 @@
     "__00003__": {},
     "__00004__": {
       "id": 0,
-      "name": "Red Hot Chili Peppers",
+      "name": "bob",
       "albums": "__00005__",
-      "country": "USA"
+      "country": "Jamaica"
     },
     "__00005__": {
-      "0": "__00006__"
+      "0": "__00006__",
+      "1": "__00007__"
     },
     "__00006__": {
       "id": 0,
-      "name": "Californication",
-      "year": "1996",
-      "tracks": "__00007__"
+      "name": "exodus",
+      "year": 1977,
+      "tracks": "__00008__"
     },
-    "__00007__": {}
+    "__00007__": {
+      "id": 1,
+      "name": "exodus",
+      "year": 1977,
+      "tracks": "__00009__"
+    },
+    "__00008__": {
+      "0": "__00010__"
+    },
+    "__00009__": {},
+    "__00010__": {
+      "albumName": "exodus",
+      "name": "guiltiness",
+      "duration": 200,
+      "genre": "reggae",
+      "lyrics": null,
+      "video": null
+    }
   },
   "types": {
     "__00001__": "UNQfy",
@@ -40,6 +58,9 @@
     "__00004__": "Artist",
     "__00005__": "Array",
     "__00006__": "Album",
-    "__00007__": "Array"
+    "__00007__": "Album",
+    "__00008__": "Array",
+    "__00009__": "Array",
+    "__00010__": "Track"
   }
 }

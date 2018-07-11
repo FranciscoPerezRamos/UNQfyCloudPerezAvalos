@@ -3,7 +3,11 @@ const rp = require('request-promise');
 const apiError = require('./apiError');
 const notifierMod = require('./notifier')
 const token = 'BQAUrW7tzi0MtGyCTfyGM3DP5mP3nf0eplDqREoClfazvE5KwK1UxGwWONNubxcuoIeqMLT3rDdePPFeDcwFziP7JK57YoCtQv9r2dvupDBIz6W0_PbOW8aP8gd_43l8ply5Nv2jjn8MSYnGER9IPlrIsS-ko5gNhY-dGFWDyORKaa3QkQ';
-const BASE_URLMM = 'http://api.musixmatch.com/ws/1.1';
+const ytMod = require('./youtubeAPI.js');
+const mmMod = require('./musixMatchAPI.js');
+
+const ytAPI = new ytMod.YouTubeAPI();
+const mmAPI = new mmMod.MusixMatchAPI();
 
 const notifier = new notifierMod.Notifier();
 
@@ -83,8 +87,9 @@ class Track {
     this.duration = trackDuration;
     this.genre = genre;
     this.lyrics = null;
+    this.video = null;
   }
-
+/*
   getLyricsMusixMatch(trackiID){
     const options = {
       uri: BASE_URLMM + `/track.lyrics.get?track_id=${trackiID}`,
@@ -129,21 +134,33 @@ class Track {
       console.log('algo salio mal', error);
     });
   }
-
+*/
   setLyrics(lyrics){
     this.lyrics = lyrics;
   }
 
   getLyrics(){
     if(this.lyrics === null){
-      return this.getTrackIDMusixMatch(this.name)
-        .then((trackID) => this.getLyricsMusixMatch(trackID))
+      return mmAPI.getTrackIDMusixMatch(this.name)
+        .then((trackID) => mmAPI.getLyricsMusixMatch(trackID))
         .then((lyric) => {
           this.setLyrics(lyric);
           return lyric;
         });
     }
     return this.lyrics;
+  }
+
+  getVideo(){
+    if(this.video === null){
+      return ytAPI.getVideoInfoFromYT(this.name).
+        then(res => {
+          this.video = res;
+          return res;
+        });
+    }else{
+      return this.video;
+    }
   }
 }
 
