@@ -28,10 +28,10 @@ COPY . /home/node/notificationservice
 
 # Le da permisos al usuario node para escribir en /home/node/my_node_app
 # Como comentario, notar que el comando RUN nos permite ejecutar culquier comando bash valido.
-RUN chown node:users /home/node/
+RUN chown node:users /home/node/notificationservice
 
 # Habilita el usuario node. Por defecto, los containers corren los comandos con el usuario root
-#USER node
+USER node
 
 # Comando por defecto sino se provee uno al hacer docker run
 # El comando corre el servicio

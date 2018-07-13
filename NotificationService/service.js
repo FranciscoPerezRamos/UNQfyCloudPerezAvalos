@@ -44,8 +44,8 @@ app.use(bodyParser.json());
 
 app.use('/api', router);
 
-const BASE_URL = 'http://localhost:5000/api'
-//const BASE_URL = 'http://172.20.0.21:5000/api'
+//const BASE_URL = 'http://localhost:5000/api'
+const BASE_URL = 'http://172.20.0.21:5000/api'
 function existingArtist(artistId){
   const options = {
       url: `${BASE_URL}/artists/${artistId}`,
