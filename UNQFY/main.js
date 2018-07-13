@@ -111,8 +111,12 @@ function main() {
   console.log(unqfy.getAllTracks());
   break;
 
+  case 'getTrackVideo':
+  unqfy.getTrackByName(process.argv[3].toLowerCase()).getVideo().then(video => console.log(video));
+  break;
+  
   case 'getLyricsFromTrack':
-    unqfy.getTrackByName(process.argv[3]).getLyrics().then((lyric) => console.log(lyric));
+    unqfy.getTrackByName(process.argv[3].toLowerCase()).getLyrics().then((lyric) => console.log(lyric));
       
   }
   if(process.argv[2] !== 'populateAlbumsForArtist'){
