@@ -24,6 +24,10 @@
     node main.js getTrackByName Guiltiness
     node main.js getAlbumByName Exodus
 
+## Busquedas en API's externas
+
+    node main.js getTrackVideo Guiltiness
+    node main.js getLyricsFromTrack Guiltiness
 
 ### UNQfy permite realizar busquedas de tracks segun el artista que los interpreta y segun su genero con los comandos getTracksMatchingArtist que recibe el nombre del artista por el cual buscar y getTracksMatchingGenres que recibe una lista de genero por los cuales realizar la busqueda.
 
